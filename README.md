@@ -1,4 +1,4 @@
-# WW-BUTTON
+# WW-DIALOG
 
 This is an element for Weweb, to display a button with a rich text editor.
 
