@@ -2,7 +2,7 @@
     "name": "ww-button",
     "repository": {
         "type": "git",
-        "url": "https://github.com/weweb-assets/ww-button"
+        "url": "https://github.com/weweb-assets/ww-dialog-root"
     },
     "version": "3.2.0",
     "license": "MIT",

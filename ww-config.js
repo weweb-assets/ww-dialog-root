@@ -26,7 +26,35 @@ export default {
                 en: 'On value change',
                 fr: 'Changement de valeur',
             },
-            event: null,
+            event: { value: true },
+        },
+        {
+            name: 'open',
+            label: {
+                en: 'On open',
+                fr: "À l'ouverture",
+            },
+        },
+        {
+            name: 'close',
+            label: {
+                en: 'On close',
+                fr: 'À la fermeture',
+            },
+        },
+    ],
+    actions: [
+        {
+            label: 'Toggle dialog',
+            action: 'toggleDialog',
+        },
+        {
+            label: 'Open dialog',
+            action: 'openDialog',
+        },
+        {
+            label: 'Close dialog',
+            action: 'closeDialog',
         },
     ],
     properties: {
@@ -47,7 +75,7 @@ export default {
             defaultValue: 'dialog',
         },
 
-        side: {
+        sideModal: {
             label: {
                 en: 'Side',
                 fr: 'Positionnement',
@@ -62,6 +90,27 @@ export default {
                 ],
             },
             defaultValue: 'middle',
+            hidden: content => content.type !== 'modal',
+            bindable: true,
+        },
+
+        sideSheet: {
+            label: {
+                en: 'Side',
+                fr: 'Positionnement',
+            },
+            type: 'TextSelect',
+            section: 'settings',
+            options: {
+                options: [
+                    { value: 'left', label: { en: 'Left', fr: 'Gauche' } },
+                    { value: 'top', label: { en: 'Top', fr: 'Haut' } },
+                    { value: 'right', label: { en: 'Right', fr: 'Droite' } },
+                    { value: 'bottom', label: { en: 'Bottom', fr: 'Bas' } },
+                ],
+            },
+            hidden: content => content.type !== 'sheet',
+            defaultValue: 'top',
             bindable: true,
         },
 
@@ -83,39 +132,33 @@ export default {
             bindable: true,
         },
 
-        manualControl: {
+        animation: {
             label: {
-                en: 'Manual control',
-                fr: 'Contrôle manuel',
+                en: 'Animation',
+                fr: 'Animation',
             },
-            type: 'OnOff',
-            section: 'settings',
-            defaultValue: false,
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: null, label: { en: 'None', fr: 'Aucune' } },
+                    { value: 'fade', label: { en: 'Fade', fr: 'Fondu' } },
+                    { value: 'slide-in', label: { en: 'Slide in', fr: 'Diapositive' } },
+                    { value: 'zoom', label: { en: 'Zoom', fr: 'Zoom' } },
+                ],
+            },
+            defaultValue: null,
             bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip:
-                    'If this is true, dialog will be open based on the `Value` and also will add a trigger `On value change` triggered when the trigger is clicked or content is closed',
-            },
-            /* wwEditor:end */
         },
 
-        value: {
+        animationDuration: {
             label: {
-                en: 'Value',
-                fr: 'Valeur',
+                en: 'Animation duration (ms)',
+                fr: "Durée de l'animation (ms)",
             },
-            type: 'OnOff',
-            section: 'settings',
-            defaultValue: false,
+            type: 'Number',
+            defaultValue: 300,
             bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip: 'Whether the dialog is open or not',
-            },
-            /* wwEditor:end */
+            hidden: content => content.animation === 'none',
         },
 
         modal: {
@@ -125,7 +168,7 @@ export default {
             },
             type: 'OnOff',
             section: 'settings',
-            defaultValue: false,
+            defaultValue: true,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
@@ -135,20 +178,21 @@ export default {
             /* wwEditor:end */
         },
 
-        teleport: {
+        preventScroll: {
             label: {
-                en: 'Teleport',
-                fr: 'Téléportation',
+                en: 'Prevent Scrolling',
+                fr: 'Désactiver le scroll',
             },
             type: 'OnOff',
             section: 'settings',
-            defaultValue: false,
+            defaultValue: true,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'When this is true, the dialog content will be teleported to the app body',
+                tooltip: 'If this is true, the scroll of the page is prevented',
             },
+            /* wwEditor:end */
         },
 
         trigger: {
@@ -158,13 +202,30 @@ export default {
             },
             type: 'OnOff',
             section: 'settings',
-            defaultValue: false,
+            defaultValue: true,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: "If this is false, the trigger won't show. Used for cases of global modals.",
+                tooltip: 'If this is true, the trigger component is present.',
             },
+        },
+
+        overlay: {
+            label: {
+                en: 'Overlay',
+                fr: 'Overlay',
+            },
+            type: 'OnOff',
+            section: 'settings',
+            defaultValue: true,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'If this is true, the overlay is shown when the content is opened',
+            },
+            /* wwEditor:end */
         },
 
         escClose: {
@@ -182,6 +243,40 @@ export default {
                 tooltip: 'If true, ESC closes the dialog on that keypress.',
             },
             /* wwEditor:end */
+        },
+
+        triggerElement: {
+            hidden: true,
+            defaultValue: {
+                isWwObject: true,
+                state: {
+                    name: 'Dialog Trigger',
+                },
+                type: 'dd310340-f805-44eb-88b2-ace029104c49',
+            },
+        },
+
+        contentElement: {
+            hidden: true,
+            defaultValue: {
+                isWwObject: true,
+                type: 'ww-flexbox',
+                state: {
+                    name: 'Dialog Content',
+                },
+            },
+            section: 'content',
+        },
+
+        overlayElement: {
+            hidden: true,
+            defaultValue: {
+                isWwObject: true,
+                type: 'a6d7c677-9243-4b70-9830-440096819744',
+                state: {
+                    name: 'Dialog Overlay',
+                },
+            },
         },
     },
 };
