@@ -5,7 +5,7 @@
         }"
         role="dialog"
         class="ww-dialog"
-        @keydown.esc="escClose && closeDialog()"
+        @keydown.esc="onEscapeKeyDown()"
     >
         <wwElement v-show="trigger" v-bind="content.triggerElement" role="dialog" />
         <Transition :name="transitionName">
@@ -35,6 +35,9 @@ export default {
     props: {
         content: { type: Object, required: true },
         uid: { type: String, required: true },
+        /* wwEditor:start */
+        wwEditorState: { type: Object, required: true },
+        /* wwEditor:end */
     },
     emits: ['trigger-event'],
     setup(props, { emit }) {
@@ -118,6 +121,14 @@ export default {
                     description: 'Close the dialog.',
                 },
             },
+        });
+
+        const isEditing = computed(() => {
+            /* wwEditor:start */
+            return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
+            /* wwEditor:end */
+            // eslint-disable-next-line no-unreachable
+            return false;
         });
 
         function toggleDialog() {
@@ -233,6 +244,14 @@ export default {
             return Number(animationDuration.value) || 300;
         });
 
+        function onEscapeKeyDown() {
+            if (isEditing.value || !escClose.value) {
+                return;
+            }
+
+            closeDialog();
+        }
+
         provide('weweb-assets/ww-dialog-root', {
             openDialog,
             closeDialog,
@@ -240,6 +259,7 @@ export default {
             value,
             animation,
             animationDuration,
+            isEditing,
         });
 
         return {
@@ -253,6 +273,8 @@ export default {
             transitionName,
             animationDurationValue,
             overlay,
+            isEditing,
+            onEscapeKeyDown,
         };
     },
 };
