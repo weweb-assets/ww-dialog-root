@@ -249,10 +249,10 @@ export default {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
+                type: '9dad7260-4e2f-4b19-bdbc-cda74b805b98',
                 state: {
                     name: 'Dialog Trigger',
                 },
-                type: 'dd310340-f805-44eb-88b2-ace029104c49',
             },
         },
 
@@ -272,7 +272,7 @@ export default {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
-                type: 'a6d7c677-9243-4b70-9830-440096819744',
+                type: 'b3fe1f27-7070-4b83-ac56-624337274de3',
                 state: {
                     name: 'Dialog Overlay',
                 },
