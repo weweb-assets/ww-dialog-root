@@ -64,7 +64,7 @@ export default {
                 fr: 'Type',
             },
             type: 'TextSelect',
-            section: 'settings',
+            section: 'style',
             options: {
                 options: [
                     { value: 'dialog', label: { en: 'Dialog', fr: 'Dialog' } },
@@ -81,7 +81,7 @@ export default {
                 fr: 'Positionnement',
             },
             type: 'TextSelect',
-            section: 'settings',
+            section: 'style',
             options: {
                 options: [
                     { value: 'left', label: { en: 'Left', fr: 'Gauche' } },
@@ -100,7 +100,7 @@ export default {
                 fr: 'Positionnement',
             },
             type: 'TextSelect',
-            section: 'settings',
+            section: 'style',
             options: {
                 options: [
                     { value: 'left', label: { en: 'Left', fr: 'Gauche' } },
@@ -120,7 +120,7 @@ export default {
                 fr: 'Alignement',
             },
             type: 'TextSelect',
-            section: 'settings',
+            section: 'style',
             options: {
                 options: [
                     { value: 'top', label: { en: 'Top', fr: 'Haut' } },
@@ -137,7 +137,7 @@ export default {
                 en: 'Animation',
                 fr: 'Animation',
             },
-            type: 'TextSelect',
+            section: 'style',
             options: {
                 options: [
                     { value: null, label: { en: 'None', fr: 'Aucune' } },
@@ -155,6 +155,7 @@ export default {
                 en: 'Animation duration (ms)',
                 fr: "Durée de l'animation (ms)",
             },
+            section: 'style',
             type: 'Number',
             defaultValue: 300,
             bindable: true,
@@ -167,7 +168,7 @@ export default {
                 fr: 'Modal',
             },
             type: 'OnOff',
-            section: 'settings',
+            section: 'style',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
@@ -184,7 +185,7 @@ export default {
                 fr: 'Désactiver le scroll',
             },
             type: 'OnOff',
-            section: 'settings',
+            section: 'style',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
@@ -201,7 +202,7 @@ export default {
                 fr: 'Déclencheur',
             },
             type: 'OnOff',
-            section: 'settings',
+            section: 'style',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
@@ -217,7 +218,7 @@ export default {
                 fr: 'Overlay',
             },
             type: 'OnOff',
-            section: 'settings',
+            section: 'style',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
@@ -234,7 +235,7 @@ export default {
                 fr: 'La touche échap pour fermer',
             },
             type: 'OnOff',
-            section: 'settings',
+            section: 'style',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
@@ -265,7 +266,6 @@ export default {
                     name: 'Dialog Content',
                 },
             },
-            section: 'content',
         },
 
         overlayElement: {
