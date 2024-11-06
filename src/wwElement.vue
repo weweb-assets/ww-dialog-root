@@ -196,6 +196,7 @@ export default {
             switch (side) {
                 case 'left':
                     Object.assign(style, {
+                        height: '100dvh',
                         top: 0,
                         bottom: 0,
                         left: 0,
@@ -203,6 +204,7 @@ export default {
                     break;
                 case 'right':
                     Object.assign(style, {
+                        height: '100dvh',
                         top: 0,
                         bottom: 0,
                         right: 0,
@@ -210,6 +212,7 @@ export default {
                     break;
                 case 'top':
                     Object.assign(style, {
+                        width: '100dvw',
                         top: 0,
                         left: 0,
                         right: 0,
@@ -217,6 +220,7 @@ export default {
                     break;
                 case 'bottom':
                     Object.assign(style, {
+                        width: '100dvw',
                         bottom: 0,
                         left: 0,
                         right: 0,
