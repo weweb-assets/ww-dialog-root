@@ -8,23 +8,23 @@
         @keydown.esc="onEscapeKeyDown()"
     >
         <wwElement v-show="trigger" v-bind="content.triggerElement" role="dialog" />
-        <Transition :name="transitionName">
-            <wwElement
-                v-bind="content.contentElement"
+        <Transition mode="out-in" :name="transitionName">
+            <div
+                v-if="value"
                 :style="{
+                    'z-index': 1000,
                     ...contentStyle,
-                    display: value ? 'flex' : 'none',
                 }"
-                role="dialog"
-            />
+            >
+                <wwElement v-bind="content.contentElement" role="dialog" />
+            </div>
         </Transition>
-        <wwElement
-            v-bind="content.overlayElement"
-            :style="{
-                display: value && overlay ? 'flex' : 'none',
-            }"
-            role="dialog"
-        />
+
+        <Transition name="fade-transition" mode="out-in">
+            <div v-if="value && overlay">
+                <wwElement v-bind="content.overlayElement" role="dialog" />
+            </div>
+        </Transition>
     </div>
 </template>
 
@@ -298,27 +298,27 @@ export default {
 .fade-transition-leave-to {
     opacity: 0;
 }
-.fade-transition-enter-to,
-.fade-transition-leave-from {
-    opacity: 1;
-}
 
 /* Slide-in Animation */
 .slide-in-transition-enter-active,
 .slide-in-transition-leave-active {
-    transition: transform var(--transition-duration);
+    transition: transform var(--transition-duration), opacity var(--transition-duration);
 }
 .slide-in-transition-enter-from {
-    transform: translateX(100%);
+    transform: translateY(-20px);
+    opacity: 0;
 }
 .slide-in-transition-enter-to {
-    transform: translateX(0);
+    transform: translateY(0);
+    opacity: 1;
 }
 .slide-in-transition-leave-from {
-    transform: translateX(0);
+    transform: translateY(0);
+    opacity: 1;
 }
 .slide-in-transition-leave-to {
-    transform: translateX(100%);
+    transform: translateY(20px);
+    opacity: 0;
 }
 
 /* Zoom Animation */

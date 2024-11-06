@@ -138,6 +138,7 @@ export default {
                 fr: 'Animation',
             },
             section: 'style',
+            type: 'TextSelect',
             options: {
                 options: [
                     { value: null, label: { en: 'None', fr: 'Aucune' } },
@@ -255,6 +256,9 @@ export default {
                     name: 'Dialog Trigger',
                 },
             },
+            navigator: {
+                hidden: content => !content.trigger,
+            },
         },
 
         contentElement: {
@@ -276,6 +280,9 @@ export default {
                 state: {
                     name: 'Dialog Overlay',
                 },
+            },
+            navigator: {
+                hidden: content => !content.overlayElement,
             },
         },
     },
