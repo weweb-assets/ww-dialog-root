@@ -2,27 +2,32 @@
     <div
         :style="{
             '--transition-duration': animationDurationValue + 'ms',
+            '--transition-easing': animationEasing,
         }"
         role="dialog"
         class="ww-dialog"
         @keydown.esc="onEscapeKeyDown()"
     >
-        <wwElement v-show="trigger" v-bind="content.triggerElement" role="dialog" />
+        <wwElement v-if="trigger" v-bind="content.triggerElement" role="dialog" />
         <Transition mode="out-in" :name="transitionName">
             <div
                 v-if="value"
                 :style="{
                     'z-index': 1000,
-                    ...contentStyle,
                 }"
             >
-                <wwElement v-bind="content.contentElement" role="dialog" />
+                <wwElement
+                    v-bind="content.contentElement"
+                    role="dialog"
+                    class="ww-dialog-transition-root"
+                    :style="contentStyle"
+                />
             </div>
         </Transition>
 
         <Transition name="fade-transition" mode="out-in">
             <div v-if="value && overlay">
-                <wwElement v-bind="content.overlayElement" role="dialog" />
+                <wwElement v-bind="content.overlayElement" class="ww-dialog-transition-root" role="dialog" />
             </div>
         </Transition>
     </div>
@@ -47,6 +52,7 @@ export default {
         const align = toRef(() => props.content.align);
         const animation = toRef(() => props.content.animation);
         const animationDuration = toRef(() => props.content.animationDuration);
+        const animationEasing = toRef(() => props.content.animationEasing);
         const modal = toRef(() => props.content.modal);
         const preventScroll = toRef(() => props.content.preventScroll);
         const trigger = toRef(() => props.content.trigger);
@@ -103,21 +109,21 @@ export default {
             toggleDialog: {
                 method: toggleDialog,
                 editor: {
-                    label: 'Dialog - Toggle dialog state',
+                    label: 'Toggle dialog state',
                     description: 'Toggle the dialog state.',
                 },
             },
             openDialog: {
                 method: openDialog,
                 editor: {
-                    label: 'Dialog - Open dialog',
+                    label: 'Open dialog',
                     description: 'Open the dialog.',
                 },
             },
             closeDialog: {
                 method: closeDialog,
                 editor: {
-                    label: 'Dialog - Close dialog',
+                    label: 'Close dialog',
                     description: 'Close the dialog.',
                 },
             },
@@ -169,7 +175,7 @@ export default {
             } else {
                 // Center horizontally
                 style.left = '50%';
-                style.transform = 'translateX(-50%)';
+                style['--translate-x'] = '-50%';
             }
 
             if (align === 'top') {
@@ -179,9 +185,9 @@ export default {
             } else {
                 style.top = '50%';
                 if (style.transform) {
-                    style.transform += ' translateY(-50%)';
+                    style['--translate-y'] = '-50%';
                 } else {
-                    style.transform = 'translateY(-50%)';
+                    style['--translate-y'] = '-50%';
                 }
             }
 
@@ -279,59 +285,56 @@ export default {
             overlay,
             isEditing,
             onEscapeKeyDown,
+            animationEasing,
         };
     },
 };
 </script>
 
 <style lang="scss" scoped>
-.ww-dialog {
-    pointer-events: auto;
+:deep(.ww-dialog-transition-root) {
+    --translate-x: 0px;
+    --translate-y: 0px;
+    --translate-x-offset: 0px;
+    --translate-y-offset: 0px;
+    --scale: 1;
+    --calc-translate-x: calc(var(--translate-x) + var(--translate-x-offset));
+    --calc-translate-y: calc(var(--translate-y) + var(--translate-y-offset));
+    transition: transform var(--transition-duration) var(--transition-easing),
+        opacity var(--transition-duration) var(--transition-easing) !important;
+    transform: translateX(var(--calc-translate-x)) translateY(var(--calc-translate-y)) scaleX(var(--scale))
+        scaleY(var(--scale)) !important;
 }
 
 /* Fade Animation */
-.fade-transition-enter-active,
-.fade-transition-leave-active {
-    transition: opacity var(--transition-duration);
-}
-.fade-transition-enter-from,
-.fade-transition-leave-to {
+.fade-transition-enter-from > :deep(.ww-dialog-transition-root),
+.fade-transition-leave-to > :deep(.ww-dialog-transition-root) {
     opacity: 0;
 }
-
 /* Slide-in Animation */
-.slide-in-transition-enter-active,
-.slide-in-transition-leave-active {
-    transition: transform var(--transition-duration), opacity var(--transition-duration);
-}
-.slide-in-transition-enter-from {
-    transform: translateY(-20px);
+.slide-in-transition-enter-from > :deep(.ww-dialog-transition-root) {
+    --translate-x-offset: -20px;
     opacity: 0;
 }
-.slide-in-transition-enter-to {
-    transform: translateY(0);
+.slide-in-transition-enter-to > :deep(.ww-dialog-transition-root) {
+    --translate-x-offset: 0;
     opacity: 1;
 }
-.slide-in-transition-leave-from {
-    transform: translateY(0);
+.slide-in-transition-leave-from > :deep(.ww-dialog-transition-root) {
+    --translate-x-offset: 0;
     opacity: 1;
 }
-.slide-in-transition-leave-to {
-    transform: translateY(20px);
+.slide-in-transition-leave-to > :deep(.ww-dialog-transition-root) {
+    --translate-x-offset: -20px;
     opacity: 0;
 }
-
 /* Zoom Animation */
-.zoom-transition-enter-active,
-.zoom-transition-leave-active {
-    transition: transform var(--transition-duration);
+.zoom-transition-enter-from > :deep(.ww-dialog-transition-root),
+.zoom-transition-leave-to > :deep(.ww-dialog-transition-root) {
+    --scale: 0;
 }
-.zoom-transition-enter-from,
-.zoom-transition-leave-to {
-    transform: scale(0);
-}
-.zoom-transition-enter-to,
-.zoom-transition-leave-from {
-    transform: scale(1);
+.zoom-transition-enter-to > :deep(.ww-dialog-transition-root),
+.zoom-transition-leave-from > :deep(.ww-dialog-transition-root) {
+    --scale: 1;
 }
 </style>

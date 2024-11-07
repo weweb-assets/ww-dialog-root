@@ -159,8 +159,32 @@ export default {
             section: 'style',
             type: 'Number',
             defaultValue: 300,
+            options: {
+                min: 0,
+                max: 10000,
+            },
             bindable: true,
             hidden: content => content.animation === 'none',
+        },
+
+        animationEasing: {
+            label: {
+                en: 'Animation easing',
+                fr: 'Animation easing',
+            },
+            section: 'style',
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'linear', label: { en: 'Linear', fr: 'Linéaire' } },
+                    { value: 'ease', label: { en: 'Ease', fr: 'Acceleration' } },
+                    { value: 'ease-in', label: { en: 'Ease in', fr: 'Acceleration progressive' } },
+                    { value: 'ease-out', label: { en: 'Ease out', fr: 'Deceleration' } },
+                    { value: 'ease-in-out', label: { en: 'Ease in out', fr: 'Acceleration et déclinaison' } },
+                ],
+            },
+            defaultValue: 'linear',
+            bindable: true,
         },
 
         modal: {
