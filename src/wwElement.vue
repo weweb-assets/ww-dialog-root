@@ -12,6 +12,7 @@
         <Transition mode="out-in" :name="transitionName">
             <div
                 v-if="value"
+                v-on-click-outside="onClickOutsideHandler"
                 :style="{
                     'z-index': 1000,
                 }"
@@ -26,7 +27,7 @@
         </Transition>
 
         <Transition name="fade-transition" mode="out-in">
-            <div v-if="value && overlay">
+            <div v-if="value && overlay" ref="overlayRef">
                 <wwElement v-bind="content.overlayElement" class="ww-dialog-transition-root" role="dialog" />
             </div>
         </Transition>
@@ -35,6 +36,7 @@
 
 <script>
 import { computed, provide, ref, toRef, watch } from 'vue';
+import { vOnClickOutside } from '@vueuse/components';
 
 export default {
     props: {
@@ -58,6 +60,7 @@ export default {
         const trigger = toRef(() => props.content.trigger);
         const overlay = toRef(() => props.content.overlay);
         const escClose = toRef(() => props.content.escClose);
+        const clickOutsideClose = toRef(() => props.content.clickOutsideClose);
 
         const { value: componentValue, setValue: setComponentValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -272,7 +275,22 @@ export default {
             isEditing,
         });
 
+        const overlayRef = ref(null);
+        const onClickOutsideHandler = [
+            () => {
+                if (clickOutsideClose.value) {
+                    closeDialog();
+                }
+            },
+            {
+                ignore: overlayRef,
+            },
+        ];
+
         return {
+            vOnClickOutside,
+            onClickOutsideHandler,
+            overlayRef,
             toggleDialog,
             openDialog,
             closeDialog,

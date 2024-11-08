@@ -271,6 +271,23 @@ export default {
             /* wwEditor:end */
         },
 
+        clickOutsideClose: {
+            label: {
+                en: 'Click outside to close',
+                fr: 'Cliquer en dehors pour fermer',
+            },
+            type: 'OnOff',
+            section: 'style',
+            defaultValue: true,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'If true, clicking outside the dialog closes it.',
+            },
+            /* wwEditor:end */
+        },
+
         triggerElement: {
             hidden: true,
             defaultValue: {
