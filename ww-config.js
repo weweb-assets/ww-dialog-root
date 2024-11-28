@@ -72,6 +72,13 @@ export default {
                     { value: 'sheet', label: { en: 'Sheet', fr: 'Sheet' } },
                 ],
             },
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: "A string matching one of the dialog types: 'dialog', 'modal' or 'sheet'.",
+            },
+            /* wwEditor:end */
             defaultValue: 'dialog',
         },
 
@@ -187,21 +194,33 @@ export default {
             bindable: true,
         },
 
+        toggleDialog: {
+            type: 'Button',
+            editorOnly: true,
+            options: {
+                text: { en: 'Toggle dialog' },
+                action: 'toggleDialog',
+            },
+        },
+
         modal: {
             label: {
                 en: 'Modal',
                 fr: 'Modal',
             },
             type: 'OnOff',
-            section: 'style',
+            section: 'settings',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'If this is true, all interactions are disabled outside the dialog content',
+                tooltip: 'If this is true, all interactions are disabled outside the dialog content.',
             },
             /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'If this is true, all interactions are disabled outside the dialog content.',
+            },
         },
 
         preventScroll: {
@@ -210,7 +229,7 @@ export default {
                 fr: 'Désactiver le scroll',
             },
             type: 'OnOff',
-            section: 'style',
+            section: 'settings',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
@@ -219,6 +238,9 @@ export default {
                 tooltip: 'If this is true, the scroll of the page is prevented',
             },
             /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'Whether users can scroll the page when the dialog is open.',
+            },
         },
 
         trigger: {
@@ -227,13 +249,17 @@ export default {
                 fr: 'Déclencheur',
             },
             type: 'OnOff',
-            section: 'style',
+            section: 'settings',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'If this is true, the trigger component is present.',
+            },
+            /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'Whether the dialog should be closed when the escape key is pressed.',
             },
         },
 
@@ -243,7 +269,7 @@ export default {
                 fr: 'Overlay',
             },
             type: 'OnOff',
-            section: 'style',
+            section: 'settings',
             defaultValue: true,
             bindable: true,
             /* wwEditor:start */
@@ -252,6 +278,9 @@ export default {
                 tooltip: 'If this is true, the overlay is shown when the content is opened',
             },
             /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'Whether you want to display an overlay behind your dialog.',
+            },
         },
 
         escClose: {
@@ -260,7 +289,7 @@ export default {
                 fr: 'La touche échap pour fermer',
             },
             type: 'OnOff',
-            section: 'style',
+            section: 'settings',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
@@ -269,6 +298,9 @@ export default {
                 tooltip: 'If true, ESC closes the dialog on that keypress.',
             },
             /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'Whether the dialog should be closed when the escape key is pressed.',
+            },
         },
 
         triggerElement: {

@@ -25,9 +25,16 @@
             </div>
         </Transition>
 
-        <Transition name="fade-transition" mode="out-in">
+        <div v-if="value && modal && !isEditing" class="pointer-capture" @click.stop="null"></div>
+
+        <Transition mode="out-in" :name="transitionName">
             <div v-if="value && overlay">
-                <wwElement v-bind="content.overlayElement" class="ww-dialog-transition-root" role="dialog" />
+                <wwElement
+                    v-bind="content.overlayElement"
+                    class="ww-dialog-transition-root"
+                    role="dialog"
+                    :style="overlayStyle"
+                />
             </div>
         </Transition>
     </div>
@@ -98,6 +105,14 @@ export default {
             },
         });
 
+        const isEditing = computed(() => {
+            /* wwEditor:start */
+            return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
+            /* wwEditor:end */
+            // eslint-disable-next-line no-unreachable
+            return false;
+        });
+
         watch(
             () => props.content.value,
             v => {
@@ -129,22 +144,33 @@ export default {
             },
         });
 
-        const isEditing = computed(() => {
-            /* wwEditor:start */
-            return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
-            /* wwEditor:end */
-            // eslint-disable-next-line no-unreachable
-            return false;
-        });
-
         function toggleDialog() {
             value.value = !value.value;
+
+            if (preventScroll.value && !isEditing.value) {
+                if (value.value) {
+                    console.log('debug2');
+                    wwLib.getFrontDocument().body.style.overflow = 'hidden';
+                    wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
+                } else {
+                    wwLib.getFrontDocument().body.style.overflow = 'auto';
+                    wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
+                }
+            }
         }
         function openDialog() {
             value.value = true;
+            if (preventScroll.value && !isEditing.value) {
+                wwLib.getFrontDocument().body.style.overflow = 'hidden';
+                wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
+            }
         }
         function closeDialog() {
             value.value = false;
+            if (preventScroll.value && !isEditing.value) {
+                wwLib.getFrontDocument().body.style.overflow = 'auto';
+                wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
+            }
         }
 
         const contentStyle = computed(() => {
@@ -157,10 +183,11 @@ export default {
                     style = getSheetStyle(sideSheet.value);
                     break;
             }
-            if (preventScroll.value) {
-                style.overflow = 'hidden';
-            }
             return style;
+        });
+
+        const overlayStyle = computed(() => {
+            return modal.value ? { pointerEvents: 'none' } : {};
         });
 
         function getModalStyle(side, align) {
@@ -277,12 +304,14 @@ export default {
             openDialog,
             closeDialog,
             contentStyle,
+            overlayStyle,
             escClose,
             trigger,
             value,
             transitionName,
             animationDurationValue,
             overlay,
+            modal,
             isEditing,
             onEscapeKeyDown,
             animationEasing,
@@ -336,5 +365,14 @@ export default {
 .zoom-transition-enter-to > :deep(.ww-dialog-transition-root),
 .zoom-transition-leave-from > :deep(.ww-dialog-transition-root) {
     --scale: 1;
+}
+
+.pointer-capture {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    pointer-events: auto;
 }
 </style>
