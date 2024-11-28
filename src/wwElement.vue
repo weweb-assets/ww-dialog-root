@@ -33,7 +33,7 @@
                     ref="overlayElement"
                     v-bind="content.overlayElement"
                     class="ww-dialog-transition-root"
-                    :class="{ 'pointer-events-none': modal }"
+                    :class="{ 'pointer-events-none': !modal }"
                     role="dialog"
                 />
             </div>
@@ -66,7 +66,6 @@ export default {
         const trigger = toRef(() => props.content.trigger);
         const overlay = toRef(() => props.content.overlay);
         const escClose = toRef(() => props.content.escClose);
-        const overlayElement = ref(null);
 
         const { value: componentValue, setValue: setComponentValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
