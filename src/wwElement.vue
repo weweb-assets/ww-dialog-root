@@ -33,6 +33,7 @@
                     ref="overlayElement"
                     v-bind="content.overlayElement"
                     class="ww-dialog-transition-root"
+                    :class="{ 'pointer-events-none': modal }"
                     role="dialog"
                 />
             </div>
@@ -165,10 +166,8 @@ export default {
                 wwLib.getFrontDocument().body.style.overflow = 'hidden';
                 wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
             }
-            if (modal.value) {
-                overlayElement.value.$el.classList.add('pointer-events-none');
-            }
         }
+
         function closeDialog() {
             value.value = false;
             if (preventScroll.value && !isEditing.value) {
@@ -188,10 +187,6 @@ export default {
                     break;
             }
             return style;
-        });
-
-        const overlayStyle = computed(() => {
-            return modal.value ? { pointerEvents: 'none' } : {};
         });
 
         function getModalStyle(side, align) {
@@ -308,7 +303,6 @@ export default {
             openDialog,
             closeDialog,
             contentStyle,
-            overlayStyle,
             escClose,
             trigger,
             value,
@@ -325,7 +319,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pointer-events-none {
+:deep(.pointer-events-none) {
     pointer-events: none;
 }
 
