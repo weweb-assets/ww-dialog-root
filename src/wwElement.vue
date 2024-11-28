@@ -34,7 +34,6 @@
                     v-bind="content.overlayElement"
                     class="ww-dialog-transition-root"
                     role="dialog"
-                    :style="overlayStyle"
                 />
             </div>
         </Transition>
