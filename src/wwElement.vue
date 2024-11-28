@@ -30,6 +30,7 @@
         <Transition mode="out-in" :name="transitionName">
             <div v-if="value && overlay">
                 <wwElement
+                    ref="overlayElement"
                     v-bind="content.overlayElement"
                     class="ww-dialog-transition-root"
                     role="dialog"
@@ -65,6 +66,7 @@ export default {
         const trigger = toRef(() => props.content.trigger);
         const overlay = toRef(() => props.content.overlay);
         const escClose = toRef(() => props.content.escClose);
+        const overlayElement = ref(null);
 
         const { value: componentValue, setValue: setComponentValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -163,6 +165,9 @@ export default {
             if (preventScroll.value && !isEditing.value) {
                 wwLib.getFrontDocument().body.style.overflow = 'hidden';
                 wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
+            }
+            if (modal.value) {
+                overlayElement.value.$el.classList.add('pointer-events-none');
             }
         }
         function closeDialog() {
@@ -321,6 +326,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.pointer-events-none {
+    pointer-events: none;
+}
+
 :deep(.ww-dialog-transition-root) {
     --translate-x: 0px;
     --translate-y: 0px;
