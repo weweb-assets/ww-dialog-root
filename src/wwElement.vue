@@ -89,6 +89,10 @@ export default {
                             value: newValue,
                         },
                     });
+                    if (preventScroll.value && !isEditing.value) {
+                        wwLib.getFrontDocument().body.style.overflow = 'hidden';
+                        wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
+                    }
                 } else {
                     emit('trigger-event', {
                         name: 'close',
@@ -96,6 +100,8 @@ export default {
                             value: newValue,
                         },
                     });
+                    wwLib.getFrontDocument().body.style.overflow = 'auto';
+                    wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
                 }
                 emit('trigger-event', {
                     name: 'change',
@@ -147,32 +153,13 @@ export default {
 
         function toggleDialog() {
             value.value = !value.value;
-
-            if (preventScroll.value && !isEditing.value) {
-                if (value.value) {
-                    console.log('debug2');
-                    wwLib.getFrontDocument().body.style.overflow = 'hidden';
-                    wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
-                } else {
-                    wwLib.getFrontDocument().body.style.overflow = 'auto';
-                    wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
-                }
-            }
         }
         function openDialog() {
             value.value = true;
-            if (preventScroll.value && !isEditing.value) {
-                wwLib.getFrontDocument().body.style.overflow = 'hidden';
-                wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
-            }
         }
 
         function closeDialog() {
             value.value = false;
-            if (preventScroll.value && !isEditing.value) {
-                wwLib.getFrontDocument().body.style.overflow = 'auto';
-                wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
-            }
         }
 
         const contentStyle = computed(() => {
