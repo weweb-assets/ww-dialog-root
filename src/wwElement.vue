@@ -113,7 +113,7 @@ export default {
         });
 
         watch(
-            () => value.value,
+            () => componentValue.value,
             v => {
                 if (preventScroll.value && !isEditing.value) {
                     if (v) {
@@ -135,13 +135,6 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         });
-
-        watch(
-            () => props.content.value,
-            v => {
-                value.value = v;
-            }
-        );
 
         wwLib.wwElement.useRegisterElementLocalContext('dialog', ref({ value }), {
             toggleDialog: {
