@@ -113,7 +113,7 @@ export default {
         });
 
         watch(
-            () => value,
+            () => value.value,
             v => {
                 if (preventScroll.value && !isEditing.value) {
                     if (v) {
