@@ -112,6 +112,22 @@ export default {
             },
         });
 
+        watch(
+            () => value,
+            v => {
+                if (preventScroll.value && !isEditing.value) {
+                    if (v) {
+                        console.log('debug2');
+                        wwLib.getFrontDocument().body.style.overflow = 'hidden';
+                        wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
+                    } else {
+                        wwLib.getFrontDocument().body.style.overflow = 'auto';
+                        wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
+                    }
+                }
+            }
+        );
+
         const isEditing = computed(() => {
             /* wwEditor:start */
             return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
