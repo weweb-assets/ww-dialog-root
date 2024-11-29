@@ -82,27 +82,14 @@ export default {
             set(newValue) {
                 setComponentValue(newValue);
 
-                if (newValue) {
-                    emit('trigger-event', {
-                        name: 'open',
-                        event: {
-                            value: newValue,
-                        },
-                    });
-                    if (preventScroll.value && !isEditing.value) {
-                        wwLib.getFrontDocument().body.style.overflow = 'hidden';
-                        wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
-                    }
-                } else {
-                    emit('trigger-event', {
-                        name: 'close',
-                        event: {
-                            value: newValue,
-                        },
-                    });
-                    wwLib.getFrontDocument().body.style.overflow = 'auto';
-                    wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
-                }
+                const eventName = newValue ? 'open' : 'close';
+                emit('trigger-event', {
+                    name: eventName,
+                    event: {
+                        value: newValue,
+                    },
+                });
+
                 emit('trigger-event', {
                     name: 'change',
                     event: {
@@ -116,14 +103,9 @@ export default {
             () => componentValue.value,
             v => {
                 if (preventScroll.value && !isEditing.value) {
-                    if (v) {
-                        console.log('debug2');
-                        wwLib.getFrontDocument().body.style.overflow = 'hidden';
-                        wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
-                    } else {
-                        wwLib.getFrontDocument().body.style.overflow = 'auto';
-                        wwLib.getFrontDocument().documentElement.style.overflow = 'auto';
-                    }
+                    const overflowValue = v ? 'hidden' : 'auto';
+                    wwLib.getFrontDocument().body.style.overflow = overflowValue;
+                    wwLib.getFrontDocument().documentElement.style.overflow = overflowValue;
                 }
             }
         );
