@@ -15,10 +15,8 @@ export function useDialogState(props, emit, isEditing) {
     });
 
     const setDialogState = newValue => {
-        if (!props.content.manualMode) {
+        if (props.content.manualMode) {
             setIsOpen(newValue);
-        } else {
-            setIsOpen(props.content.value);
         }
 
         const eventName = newValue ? 'open' : 'close';
@@ -41,7 +39,8 @@ export function useDialogState(props, emit, isEditing) {
     watch(
         () => props.content.value,
         newValue => {
-            if (props.content.manualMode && !isEditing.value) {
+            if (props.content.manualMode) {
+                console.log('test');
                 setDialogState(!!newValue);
             }
         },
@@ -52,7 +51,7 @@ export function useDialogState(props, emit, isEditing) {
     watch(
         () => props.content.manualMode,
         newValue => {
-            if (newValue && !isEditing.value) {
+            if (newValue) {
                 setDialogState(!!props.content.value);
             }
         },
