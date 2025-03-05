@@ -15,7 +15,7 @@ export function useDialogState(props, emit, isEditing) {
     });
 
     const setDialogState = newValue => {
-        if (props.content.manualMode) {
+        if (!props.content.manualMode) {
             setIsOpen(newValue);
         }
 
@@ -41,7 +41,7 @@ export function useDialogState(props, emit, isEditing) {
         newValue => {
             if (props.content.manualMode) {
                 console.log('test');
-                setDialogState(!!newValue);
+                setIsOpen(!!newValue);
             }
         },
         { immediate: true }
@@ -52,7 +52,7 @@ export function useDialogState(props, emit, isEditing) {
         () => props.content.manualMode,
         newValue => {
             if (newValue) {
-                setDialogState(!!props.content.value);
+                setIsOpen(!!props.content.value);
             }
         },
         { immediate: true }
