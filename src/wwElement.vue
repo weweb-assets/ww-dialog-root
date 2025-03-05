@@ -93,7 +93,11 @@ export default {
         });
 
         // Use composables
-        const { isOpen, toggleDialog, openDialog, closeDialog, registerDialogContext } = useDialogState(props, emit);
+        const { isOpen, toggleDialog, openDialog, closeDialog, registerDialogContext } = useDialogState(
+            props,
+            emit,
+            isEditing
+        );
 
         const { onEscapeKeyDown, handleOverlayClick, handleOutsideClick, onTriggerClick } = useDialogInteractions(
             props,

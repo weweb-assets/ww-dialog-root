@@ -1,6 +1,6 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-export function useDialogState(props, emit) {
+export function useDialogState(props, emit, isEditing) {
     const { value: isOpen, setValue: setIsOpen } = wwLib.wwVariable.useComponentVariable({
         uid: props.uid,
         name: 'open',
@@ -36,6 +36,28 @@ export function useDialogState(props, emit) {
             },
         });
     };
+
+    // Watch for content.value changes when in manual mode
+    watch(
+        () => props.content.value,
+        newValue => {
+            if (props.content.manualMode && !isEditing.value) {
+                setDialogState(!!newValue);
+            }
+        },
+        { immediate: true }
+    );
+
+    // Also watch for manualMode changes to update state when toggled
+    watch(
+        () => props.content.manualMode,
+        newValue => {
+            if (newValue && !isEditing.value) {
+                setDialogState(!!props.content.value);
+            }
+        },
+        { immediate: true }
+    );
 
     function toggleDialog() {
         setDialogState(!isOpen.value);
