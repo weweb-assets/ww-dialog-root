@@ -58,8 +58,11 @@
 </template>
 
 <script>
-import { computed, ref, watch, onUnmounted } from 'vue';
+import { computed } from 'vue';
 import { useDialogStyle } from './composables/useDialogStyle';
+import { useDialogState } from './composables/useDialogState';
+import { useDialogInteractions } from './composables/useDialogInteractions';
+import { useScrollLock } from './composables/useScrollLock';
 
 export default {
     props: {
@@ -81,85 +84,6 @@ export default {
             return getTransitionName(props.content.animation, props.content.slideInDirection);
         });
 
-        const { value: isOpen, setValue: setIsOpen } = wwLib.wwVariable.useComponentVariable({
-            uid: props.uid,
-            name: 'open',
-            type: 'boolean',
-            defaultValue: false,
-            componentType: 'element',
-        });
-
-        const setDialogState = newValue => {
-            setIsOpen(newValue);
-
-            const eventName = newValue ? 'open' : 'close';
-            emit('trigger-event', {
-                name: eventName,
-                event: {
-                    open: newValue,
-                },
-            });
-
-            emit('trigger-event', {
-                name: 'change',
-                event: {
-                    open: newValue,
-                },
-            });
-        };
-
-        function toggleDialog() {
-            setDialogState(!isOpen.value);
-        }
-        function openDialog() {
-            setDialogState(true);
-        }
-
-        function closeDialog() {
-            setDialogState(false);
-        }
-
-        function addEscapeListener() {
-            wwLib.getFrontDocument().addEventListener('keydown', handleEscapeKey);
-        }
-
-        function removeEscapeListener() {
-            wwLib.getFrontDocument().removeEventListener('keydown', handleEscapeKey);
-        }
-
-        function handleEscapeKey(event) {
-            if (event.key === 'Escape') {
-                onEscapeKeyDown();
-            }
-        }
-
-        function onEscapeKeyDown() {
-            if (isEditing.value || !props.content.escClose) {
-                return;
-            }
-            closeDialog();
-        }
-
-        watch(
-            () => isOpen.value,
-            newValue => {
-                if (props.content.preventScroll && !isEditing.value) {
-                    if (newValue) {
-                        wwLib.getFrontDocument().body.style.overflow = 'hidden';
-                        wwLib.getFrontDocument().documentElement.style.overflow = 'hidden';
-                    } else {
-                        wwLib.getFrontDocument().body.style.removeProperty('overflow');
-                        wwLib.getFrontDocument().documentElement.style.removeProperty('overflow');
-                    }
-                }
-                if (newValue) {
-                    addEscapeListener();
-                } else {
-                    removeEscapeListener();
-                }
-            }
-        );
-
         const isEditing = computed(() => {
             /* wwEditor:start */
             return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
@@ -168,29 +92,22 @@ export default {
             return false;
         });
 
-        wwLib.wwElement.useRegisterElementLocalContext('dialog', ref({ isOpen }), {
-            toggleDialog: {
-                method: toggleDialog,
-                editor: {
-                    label: 'Toggle',
-                    description: 'Toggle the dialog state.',
-                },
-            },
-            openDialog: {
-                method: openDialog,
-                editor: {
-                    label: 'Open',
-                    description: 'Open the dialog.',
-                },
-            },
-            closeDialog: {
-                method: closeDialog,
-                editor: {
-                    label: 'Close',
-                    description: 'Close the dialog.',
-                },
-            },
-        });
+        // Use composables
+        const { isOpen, toggleDialog, openDialog, closeDialog, registerDialogContext } = useDialogState(props, emit);
+
+        const { onEscapeKeyDown, handleOverlayClick, handleOutsideClick, onTriggerClick } = useDialogInteractions(
+            props,
+            emit,
+            isOpen,
+            closeDialog,
+            toggleDialog,
+            isEditing
+        );
+
+        useScrollLock(props, isOpen, isEditing);
+
+        // Register dialog context
+        registerDialogContext();
 
         const contentStyle = computed(() => {
             let style = {};
@@ -208,32 +125,6 @@ export default {
                     break;
             }
             return style;
-        });
-
-        function handleOverlayClick() {
-            if (props.content.overlayClickCloses && !isEditing.value) {
-                closeDialog();
-            }
-        }
-
-        function handleOutsideClick() {
-            if (props.content.clickOutsideCloses && !isEditing.value) {
-                closeDialog();
-            }
-        }
-
-        function onTriggerClick() {
-            if (!props.content.triggerClickOpens || isEditing.value) {
-                return;
-            }
-
-            toggleDialog();
-        }
-
-        onUnmounted(() => {
-            removeEscapeListener();
-            wwLib.getFrontDocument().body.style.removeProperty('overflow');
-            wwLib.getFrontDocument().documentElement.style.removeProperty('overflow');
         });
 
         return {

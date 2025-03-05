@@ -74,6 +74,43 @@ export default {
                 action: 'toggleDialog',
             },
         },
+        manualMode: {
+            label: {
+                en: 'Manual mode',
+                fr: 'Mode manuel',
+            },
+            type: 'OnOff',
+            defaultValue: true,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'Boolean value representing if the dialog is in manual mode.',
+            },
+            /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'Whether the dialog is in manual mode.',
+            },
+        },
+        value: {
+            hidden: content => !content.manualMode,
+            label: {
+                en: 'Value',
+                fr: 'Valeur',
+            },
+            type: 'OnOff',
+            defaultValue: true,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'Boolean value representing if the dialog is in manual mode.',
+            },
+            /* wwEditor:end */
+            propertyHelp: {
+                tooltip: 'Whether the dialog is in manual mode.',
+            },
+        },
         type: {
             label: {
                 en: 'Type',
@@ -89,6 +126,7 @@ export default {
                 ],
             },
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -125,6 +163,7 @@ export default {
             defaultValue: 'center',
             hidden: content => content.type !== 'modal',
             bindable: true,
+            responsive: true,
         },
         customPositionX: {
             hidden: content => content.sideModal !== 'custom' || content.type !== 'modal',
@@ -147,6 +186,7 @@ export default {
             },
             /* wwEditor:end */
             bindable: true,
+            responsive: true,
         },
         sideSheet: {
             label: {
@@ -172,6 +212,7 @@ export default {
             hidden: content => content.type !== 'sheet',
             defaultValue: 'top',
             bindable: true,
+            responsive: true,
         },
         align: {
             hidden: content => content.type !== 'modal',
@@ -197,6 +238,7 @@ export default {
             /* wwEditor:end */
             defaultValue: 'center',
             bindable: true,
+            responsive: true,
         },
         customPositionY: {
             hidden: content => content.align !== 'custom' || content.type !== 'modal',
@@ -219,6 +261,7 @@ export default {
             },
             /* wwEditor:end */
             bindable: true,
+            responsive: true,
         },
         animation: {
             label: {
@@ -243,6 +286,7 @@ export default {
             /* wwEditor:end */
             defaultValue: null,
             bindable: true,
+            responsive: true,
         },
         slideInDirection: {
             hidden: content => content.animation !== 'slide-in' || content.animation === null,
@@ -268,6 +312,7 @@ export default {
             /* wwEditor:end */
             defaultValue: 'top',
             bindable: true,
+            responsive: true,
         },
         animationDuration: {
             label: {
@@ -289,6 +334,7 @@ export default {
             /* wwEditor:end */
             bindable: true,
             hidden: content => content.animation === null,
+            responsive: true,
         },
         animationEasing: {
             label: {
@@ -315,9 +361,9 @@ export default {
             /* wwEditor:end */
             defaultValue: 'linear',
             bindable: true,
+            responsive: true,
             hidden: content => content.animation === null,
         },
-
         preventScroll: {
             label: {
                 en: 'Prevent Scrolling',
@@ -345,6 +391,7 @@ export default {
 
             defaultValue: false,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
@@ -363,6 +410,7 @@ export default {
             type: 'OnOff',
             defaultValue: true,
             bindable: true,
+
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
@@ -403,6 +451,7 @@ export default {
 
             defaultValue: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
