@@ -69,6 +69,11 @@ export default {
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
     },
+    provide() {
+        return {
+            isInDialog: ref(true),
+        };
+    },
     emits: ['trigger-event'],
     setup(props, { emit }) {
         const { getModalStyle, getSheetStyle, getTransitionName } = useDialogStyle();
