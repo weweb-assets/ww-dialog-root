@@ -35,6 +35,7 @@ export default {
                 fr: 'Changement de valeur',
             },
             event: { value: true },
+            description: "Run when the dialog open/closed state changes.",
         },
         {
             name: 'open',
@@ -42,6 +43,7 @@ export default {
                 en: 'On open',
                 fr: "À l'ouverture",
             },
+            description: "Run when the dialog opens.",
         },
         {
             name: 'close',
@@ -49,6 +51,7 @@ export default {
                 en: 'On close',
                 fr: 'À la fermeture',
             },
+            description: "Run when the dialog closes.",
         },
     ],
     actions: [
